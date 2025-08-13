@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         $.ajax({
-            url: "../backend/users/login.php",
+            url: "./backend/users/login.php",
             type: "POST",
             data: {
                 email: email,
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const data = JSON.parse(response);
                 if (data.status === "success") {
                     // Redirect to the dashboard or home page
-                    window.location.href = "components/dashboard.php";
+                    window.location.href = "./components/dashboard.php";
                 } else {
                     // Show error message
                     const errorDiv = document.createElement("div");
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
         $.ajax({
-            url: "../backend/users/signup.php",
+            url: "./backend/users/signup.php",
             type: "POST",
             data: {
                 full_name: fullName,

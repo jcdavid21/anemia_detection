@@ -2,6 +2,11 @@
 session_start();
 require_once '../backend/config.php';
 
+if(empty($_SESSION["user_id"])){
+    header("Location: logout.php");
+    exit();
+}
+
 // Pagination settings
 $records_per_page = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -17,6 +22,11 @@ $date_to = isset($_GET['date_to']) ? $_GET['date_to'] : '';
 $where_conditions = [];
 $params = [];
 $param_types = '';
+
+// Always filter by user_id first
+$where_conditions[] = "user_id = ?";
+$params[] = $_SESSION["user_id"];
+$param_types .= 'i';
 
 if (!empty($search)) {
     $where_conditions[] = "(patient_name LIKE ? OR notes LIKE ?)";
@@ -43,17 +53,12 @@ if (!empty($date_to)) {
     $param_types .= 's';
 }
 
-$where_clause = '';
-if (!empty($where_conditions)) {
-    $where_clause = 'WHERE ' . implode(' AND ', $where_conditions);
-}
+$where_clause = 'WHERE ' . implode(' AND ', $where_conditions);
 
 // Get total records for pagination
 $count_sql = "SELECT COUNT(*) as total FROM diagnosis_results $where_clause";
 $count_stmt = $conn->prepare($count_sql);
-if (!empty($params)) {
-    $count_stmt->bind_param($param_types, ...$params);
-}
+$count_stmt->bind_param($param_types, ...$params);
 $count_stmt->execute();
 $total_records = $count_stmt->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_records / $records_per_page);
@@ -65,15 +70,16 @@ $params[] = $offset;
 $param_types .= 'ii';
 
 $stmt = $conn->prepare($sql);
-if (!empty($params)) {
-    $stmt->bind_param($param_types, ...$params);
-}
+$stmt->bind_param($param_types, ...$params);
 $stmt->execute();
 $results = $stmt->get_result();
 
-// Get unique classifications for filter dropdown
-$class_sql = "SELECT DISTINCT classification FROM diagnosis_results ORDER BY classification";
-$class_result = $conn->query($class_sql);
+// Get unique classifications for filter dropdown (also filtered by user_id)
+$class_sql = "SELECT DISTINCT classification FROM diagnosis_results WHERE user_id = ? ORDER BY classification";
+$class_stmt = $conn->prepare($class_sql);
+$class_stmt->bind_param('i', $_SESSION["user_id"]);
+$class_stmt->execute();
+$class_result = $class_stmt->get_result();
 $classifications = [];
 while ($row = $class_result->fetch_assoc()) {
     $classifications[] = $row['classification'];
@@ -88,6 +94,7 @@ while ($row = $class_result->fetch_assoc()) {
     <title>Saved Results - Hematology Diagnosis System</title>
     <link rel="stylesheet" href="../styles/sidebar.css">
     <link rel="stylesheet" href="../styles/results.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -205,12 +212,19 @@ while ($row = $class_result->fetch_assoc()) {
                                         </div>
                                     </td>
                                     <td class="actions-cell">
+                                        <button class="action-btn print-btn" 
+                                                onclick="printResult(<?php echo $row['id']; ?>)"
+                                                title="Print Report">
+                                            Save
+                                        </button>
                                         <button class="action-btn view-btn" 
-                                                onclick="viewResult(<?php echo $row['id']; ?>)">
+                                                onclick="viewResult(<?php echo $row['id']; ?>)"
+                                                title="View Details">
                                             View
                                         </button>
                                         <button class="action-btn delete-btn" 
-                                                onclick="deleteResult(<?php echo $row['id']; ?>)">
+                                                onclick="deleteResult(<?php echo $row['id']; ?>)"
+                                                title="Delete Result">
                                             Delete
                                         </button>
                                     </td>
@@ -321,5 +335,20 @@ while ($row = $class_result->fetch_assoc()) {
 
     <script src="../js/results.js"></script>
     <script src="../js/sidebar.js"></script>
+    <script>
+        function printResult(id) {
+            const printUrl = `print-result.php?id=${id}`;
+            window.open(printUrl, '_blank');
+
+            // Wait for the page to load, then trigger print
+            if (printWindow) {
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        printWindow.print();
+                    }, 500);
+                };
+            }
+        }
+    </script>
 </body>
 </html>
