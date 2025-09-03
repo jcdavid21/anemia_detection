@@ -12,7 +12,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyCzVwiwU-DBYVlgcXOgg9-4NUpd9Hjw5iA")
+API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyBi5ffqSfZTPomL8XjZTehb36V86LHVPxE")
 genai.configure(api_key=API_KEY)
 
 @app.route("/predict_anemia", methods=["POST"])
