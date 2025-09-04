@@ -21,7 +21,7 @@
     
     <div class="main-content">
         <div class="page-header">
-            <h1>Hematology Diagnosis System</h1>
+            <h1>Anemia Diagnosis System</h1>
             <p>Upload a CBC result image to get an AI-powered anemia classification</p>
         </div>
 
