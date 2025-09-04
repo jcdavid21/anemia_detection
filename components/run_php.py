@@ -12,7 +12,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyBi5ffqSfZTPomL8XjZTehb36V86LHVPxE")
+API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyDjQ8OhAydFbCnrD0Y-RpAMUgGWqeCuGxs")
 genai.configure(api_key=API_KEY)
 
 @app.route("/predict_anemia", methods=["POST"])
@@ -78,6 +78,7 @@ def predict_anemia():
 
                 analysis_response = model.generate_content([uploaded_file, analysis_prompt])
                 analysis_text = analysis_response.text
+
             
                 # Clean up the response text to extract only the JSON
                 analysis_text = analysis_text.strip()
@@ -94,7 +95,6 @@ def predict_anemia():
                     "explanation": analysis_data["explanation"],
                     "healthrisk": analysis_data["healthrisk"],
                 }
-
                 return jsonify(result)
         finally:
             #clean up the temporary file
