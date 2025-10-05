@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+
+<?php 
+    session_start();
+require_once '../backend/config.php';
+
+if (empty($_SESSION["user_id"])) {
+    header("Location: ../index.php");
+    exit();
+}
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
