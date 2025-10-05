@@ -30,6 +30,8 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
     border-left: 4px solid #000000;
+    max-width: 1200px;
+    width: 100%;
 }
 
 .page-header h1 {
@@ -109,30 +111,8 @@ body {
     display: block;
 }
 
-.analyze-btn {
-    background: #000000;
-    color: #ffffff;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 1.5rem;
-    width: 100%;
-    max-width: 300px;
-}
 
-.analyze-btn:hover {
-    background: #333333;
-    transform: translateY(-2px);
-}
 
-.analyze-btn:disabled {
-    background: #cccccc;
-    cursor: not-allowed;
-    transform: none;
-}
 
 /* Loading Container */
 .loading-container {
