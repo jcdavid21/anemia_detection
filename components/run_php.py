@@ -49,13 +49,22 @@ def predict_anemia():
             
                 Provide healthrisk information and recommendations for further action or treatment.
 
-                if the image is not a CBC result return or your cannot identify the type of anemia return this JSON object:
+                if the image is not a CBC result or you cannot identify the type of anemia, return this JSON object:
                 
                 {
                     "classification": "Not a CBC result",
                     "confidence_score": "0%",
                     "explanation": "The image does not contain a complete blood count (CBC) result.",
-                    "healthrisk": "No health risk information available.",
+                    "healthrisk": "No health risk information available."
+                }
+
+                if the result shows no anemia (healthy result), return:
+                
+                {
+                    "classification": "Health no anemia",
+                    "confidence_score": "0%",
+                    "explanation": "The CBC results are within normal ranges, indicating no anemia.",
+                    "healthrisk": "No health risk detected. Maintain a healthy lifestyle."
                 }
 
                 For each identification, provide a confidence score that accurately reflects your certainty:
@@ -65,13 +74,13 @@ def predict_anemia():
                     - 30-49%: Low confidence, educated guess based on limited visual cues
                     - Below 30%: Very uncertain, minimal distinguishing features visible
                     
-                    Format your response as a JSON object with the following structure:
-                    {
-                        "classification": "Type of anemia",
-                        "confidence_score": "Confidence score as a percentage",
-                        "explanation": "Detailed explanation of the classification",
-                        "healthrisk": "Health risk information",
-                    }
+                Format your response as a JSON object with the following structure:
+                {
+                    "classification": "Type of anemia",
+                    "confidence_score": "Confidence score as a percentage",
+                    "explanation": "Detailed explanation of the classification",
+                    "healthrisk": "Health risk information"
+                }
 
                 Return ONLY the JSON object, nothing else.
                 """

@@ -693,3 +693,16 @@ body {
     }
 }
 
+
+
+.save-btn:disabled {
+    background: #95a5a6 !important;
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+    box-shadow: none !important;
+}
+
+.save-btn:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}

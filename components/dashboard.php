@@ -645,7 +645,9 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
 
                     <div class="chart-container">
-                        <div class="chart-title">Confidence Visualization</div>
+                        <div class="chart-title">
+                            Predicted Anemia Type
+                        </div>
                         <div class="chart-wrapper">
                             <canvas id="confidenceChart" class="chart-canvas"></canvas>
                         </div>
@@ -667,7 +669,9 @@ if (!isset($_SESSION['user_id'])) {
                 <!-- Save Results Section -->
                 <div class="save-section">
                     <div class="save-header">
-                        <h3>💾 Save Results</h3>
+                        <h3>
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            Save Results</h3>
                         <p>Save this analysis to the database for future reference</p>
                     </div>
                     <div class="save-form">

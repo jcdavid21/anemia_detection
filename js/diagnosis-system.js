@@ -413,7 +413,7 @@ function displayImagePreview(file) {
     reader.readAsDataURL(file);
 }
 
-// Update the existing displayResults function
+// Display analysis results
 function displayResults(data) {
     try {
         // Store analysis data for saving
@@ -452,8 +452,14 @@ function displayResults(data) {
         // Show results
         resultsContainer.classList.add('show');
 
-        // Setup save button
-        setupSaveButton();
+        // Check if saving should be disabled
+        const shouldDisableSave = 
+            confidencePercent === 0 || 
+            data.classification === 'Not a CBC result' || 
+            data.classification === 'Health no anemia';
+
+        // Setup save button with conditional state
+        setupSaveButton(shouldDisableSave);
 
     } catch (error) {
         console.error('Error displaying results:', error);
@@ -462,8 +468,26 @@ function displayResults(data) {
 }
 
 // New function to setup save button
-function setupSaveButton() {
-    saveBtn.addEventListener('click', saveResultsToDatabase);
+function setupSaveButton(shouldDisable = false) {
+    // Remove any existing event listeners by cloning the button
+    const newSaveBtn = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+    
+    // Update the global reference
+    const updatedSaveBtn = document.getElementById('saveBtn');
+    
+    if (shouldDisable) {
+        updatedSaveBtn.disabled = true;
+        updatedSaveBtn.style.opacity = '0.5';
+        updatedSaveBtn.style.cursor = 'not-allowed';
+        updatedSaveBtn.textContent = 'Cannot Save - Invalid Result';
+    } else {
+        updatedSaveBtn.disabled = false;
+        updatedSaveBtn.style.opacity = '1';
+        updatedSaveBtn.style.cursor = 'pointer';
+        updatedSaveBtn.textContent = 'Save to Database';
+        updatedSaveBtn.addEventListener('click', saveResultsToDatabase);
+    }
 }
 
 // New function to save results to database
