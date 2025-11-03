@@ -373,7 +373,7 @@ let currentAnalysisData = null;
 // Add these to your existing DOM elements
 const imagePreview = document.getElementById('imagePreview');
 const previewImage = document.getElementById('previewImage');
-const saveBtn = document.getElementById('saveBtn');
+// const saveBtn = document.getElementById('saveBtn');
 const saveMessage = document.getElementById('saveMessage');
 const patientNameInput = document.getElementById('patientName');
 const notesInput = document.getElementById('notes');
@@ -469,24 +469,30 @@ function displayResults(data) {
 
 // New function to setup save button
 function setupSaveButton(shouldDisable = false) {
-    // Remove any existing event listeners by cloning the button
-    const newSaveBtn = saveBtn.cloneNode(true);
-    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+    const saveBtnElement = document.getElementById('saveBtn');
     
-    // Update the global reference
-    const updatedSaveBtn = document.getElementById('saveBtn');
+    if (!saveBtnElement) {
+        console.error('Save button not found');
+        return;
+    }
+    
+    // Remove existing event listener
+    saveBtnElement.replaceWith(saveBtnElement.cloneNode(true));
+    
+    // Get fresh reference
+    const freshBtn = document.getElementById('saveBtn');
     
     if (shouldDisable) {
-        updatedSaveBtn.disabled = true;
-        updatedSaveBtn.style.opacity = '0.5';
-        updatedSaveBtn.style.cursor = 'not-allowed';
-        updatedSaveBtn.textContent = 'Cannot Save - Invalid Result';
+        freshBtn.disabled = true;
+        freshBtn.style.opacity = '0.5';
+        freshBtn.style.cursor = 'not-allowed';
+        freshBtn.textContent = 'Cannot Save - Invalid Result';
     } else {
-        updatedSaveBtn.disabled = false;
-        updatedSaveBtn.style.opacity = '1';
-        updatedSaveBtn.style.cursor = 'pointer';
-        updatedSaveBtn.textContent = 'Save to Database';
-        updatedSaveBtn.addEventListener('click', saveResultsToDatabase);
+        freshBtn.disabled = false;
+        freshBtn.style.opacity = '1';
+        freshBtn.style.cursor = 'pointer';
+        freshBtn.textContent = 'Save to Database';
+        freshBtn.addEventListener('click', saveResultsToDatabase);
     }
 }
 
@@ -496,10 +502,11 @@ function saveResultsToDatabase() {
         showError('No analysis data to save.');
         return;
     }
+    const saveBtnElement = document.getElementById('saveBtn');
 
     // Disable save button during processing
-    saveBtn.disabled = true;
-    saveBtn.textContent = 'Saving...';
+    saveBtnElement.disabled = true;
+    saveBtnElement.textContent = 'Saving...';
 
     // Convert image to base64
     const reader = new FileReader();
