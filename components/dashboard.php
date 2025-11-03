@@ -611,7 +611,7 @@ if (!isset($_SESSION['user_id'])) {
 
             <div style="text-align: center;">
                 <button class="analyze-btn" id="analyzeBtn" disabled>
-                    🔬 Analyze Image
+                    <i class="fa-solid fa-microscope"></i> Analyze Image
                 </button>
             </div>
 
