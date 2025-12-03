@@ -659,12 +659,12 @@ if (!isset($_SESSION['user_id'])) {
                     <div class="explanation-text" id="explanationText">-</div>
                 </div>
 
-                <div class="recommendations-section">
+                <!-- <div class="recommendations-section">
                     <div class="recommendations-title">Health Risk</div>
                     <ul class="recommendations-list" id="recommendationsList">
                         <li>No health risk available</li>
                     </ul>
-                </div>
+                </div> -->
 
                 <!-- Save Results Section -->
                 <div class="save-section">

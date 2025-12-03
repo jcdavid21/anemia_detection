@@ -30,7 +30,7 @@ def predict_anemia():
             temp_file_path = temp_file.name
 
         try:
-            model = genai.GenerativeModel('gemini-2.0-flash')
+            model = genai.GenerativeModel('gemini-2.5-flash')
 
             # Upload image file
             with open(temp_file_path, 'rb') as f:
@@ -53,19 +53,22 @@ def predict_anemia():
                 
                 {
                     "classification": "Not a CBC result",
-                    "confidence_score": "0%",
+                    "confidence_score": "0",
                     "explanation": "The image does not contain a complete blood count (CBC) result.",
                     "healthrisk": "No health risk information available."
                 }
 
                 if the result shows no anemia (healthy result), return:
-                
+                                
                 {
                     "classification": "Health no anemia",
-                    "confidence_score": "0%",
+                    "confidence_score": "0",
                     "explanation": "The CBC results are within normal ranges, indicating no anemia.",
                     "healthrisk": "No health risk detected. Maintain a healthy lifestyle."
                 }
+
+                
+                IMPORTANT: For confidence_score, return ONLY the number without the % symbol. For example: "95" not "95%"
 
                 For each identification, provide a confidence score that accurately reflects your certainty:
                     - 90-100%: Very high confidence with clear visual evidence
@@ -98,12 +101,20 @@ def predict_anemia():
                 
                 analysis_data = json.loads(analysis_text.strip())
 
+                # Force confidence to 0 for invalid results
+                confidence_score = analysis_data["confidence_score"]
+                classification = analysis_data["classification"]
+                
+                if classification in ["Not a CBC result", "Health no anemia"]:
+                    confidence_score = "0"
+                
                 result = {
-                    "classification": analysis_data["classification"],
-                    "confidence_score": analysis_data["confidence_score"],
+                    "classification": classification,
+                    "confidence_score": confidence_score,
                     "explanation": analysis_data["explanation"],
                     "healthrisk": analysis_data["healthrisk"],
                 }
+                print(f"DEBUG - Returning confidence_score: {result['confidence_score']}")
                 return jsonify(result)
         finally:
             #clean up the temporary file

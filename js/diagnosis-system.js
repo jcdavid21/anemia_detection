@@ -161,12 +161,14 @@ function displayResults(data) {
         }
 
         // Parse and update confidence
-        const confidenceScore = data.confidence_score || '0%';
-        const confidencePercent = parseInt(confidenceScore.replace('%', '')) || 0;
+        const confidenceScore = data.confidence_score || '0';
+        // Handle both "95%" and "95" formats
+        const confidencePercent = parseInt(String(confidenceScore).replace('%', '')) || 0;
+        const confidenceScoreDisplay = confidenceScore.toString().includes('%') ? confidenceScore : confidenceScore + '%';
 
         const confidenceText = document.getElementById('confidenceText');
         if (confidenceText) {
-            confidenceText.textContent = confidenceScore;
+            confidenceText.textContent = confidenceScoreDisplay;
         }
 
         // Update confidence bar
@@ -179,7 +181,7 @@ function displayResults(data) {
         }
 
         // Update recommendations
-        updateRecommendations(data.healthrisk);
+        // updateRecommendations(data.healthrisk);
 
         // Create confidence chart
         createConfidenceChart(confidencePercent);
@@ -202,37 +204,37 @@ function updateConfidenceBar(confidencePercent) {
 }
 
 // Update recommendations list
-function updateRecommendations(recommendations) {
-    const recommendationsList = document.getElementById('recommendationsList');
-    if (!recommendationsList) return;
+// function updateRecommendations(recommendations) {
+//     const recommendationsList = document.getElementById('recommendationsList');
+//     if (!recommendationsList) return;
 
-    recommendationsList.innerHTML = '';
+//     recommendationsList.innerHTML = '';
 
-    if (recommendations) {
-        // Split recommendations by periods or bullet points and create list items
-        const recommendationItems = recommendations
-            .split(/[.•]/)
-            .map(item => item.trim())
-            .filter(item => item.length > 10); // Filter out very short items
+//     if (recommendations) {
+//         // Split recommendations by periods or bullet points and create list items
+//         const recommendationItems = recommendations
+//             .split(/[.•]/)
+//             .map(item => item.trim())
+//             .filter(item => item.length > 10); // Filter out very short items
 
-        if (recommendationItems.length > 0) {
-            recommendationItems.forEach(rec => {
-                const li = document.createElement('li');
-                li.textContent = rec;
-                recommendationsList.appendChild(li);
-            });
-        } else {
-            // If splitting didn't work, use the full text as one item
-            const li = document.createElement('li');
-            li.textContent = recommendations;
-            recommendationsList.appendChild(li);
-        }
-    } else {
-        const li = document.createElement('li');
-        li.textContent = 'No recommendations available';
-        recommendationsList.appendChild(li);
-    }
-}
+//         if (recommendationItems.length > 0) {
+//             recommendationItems.forEach(rec => {
+//                 const li = document.createElement('li');
+//                 li.textContent = rec;
+//                 recommendationsList.appendChild(li);
+//             });
+//         } else {
+//             // If splitting didn't work, use the full text as one item
+//             const li = document.createElement('li');
+//             li.textContent = recommendations;
+//             recommendationsList.appendChild(li);
+//         }
+//     } else {
+//         const li = document.createElement('li');
+//         li.textContent = 'No recommendations available';
+//         recommendationsList.appendChild(li);
+//     }
+// }
 
 // Create confidence chart
 function createConfidenceChart(confidence) {
@@ -444,7 +446,7 @@ function displayResults(data) {
         }
 
         // Update recommendations
-        updateRecommendations(data.healthrisk);
+        // updateRecommendations(data.healthrisk);
 
         // Create confidence chart
         createConfidenceChart(confidencePercent);
